@@ -16,7 +16,7 @@
   if (!requireNamespace("utils", quietly = TRUE)) {
     stop("需要安装 'utils' 包")
   }
-  checkManage()
+  # checkManage()
   #suppressWarnings({
   #  untrace("med_cal", where = asNamespace(pkgname))
   #})
@@ -34,30 +34,30 @@
   validate_environment()
 }
 
-checkManage <- function(){
-    # 检查是否存在授权文件
-    verify <- VerifyManage$new()
-    license_key <- verify$read_license()
-    unHave_license <- is.null(license_key)
-    if (unHave_license) {
-      # packageStartupMessage("未找到授权文件，请根据机器码向管理员获取授权")
-      # 提示用户输入
-      machine_id <- verify$get_machine_id()
-      packageStartupMessage(sprintf("您的机器码是：%s", machine_id))
-      license_key <- readline(prompt = "请输入您的授权码后按回车：")
-    }
-    # 验证授权
-    chekcResult <- verify$verify_license(license_key)
-    print(chekcResult)
-    if (!chekcResult$success) {
-      stop("未授权，禁止使用本包。请联系管理员获取授权，并替换授权文件。")
-    }else{
-      #授权成功再进行license存储
-      if(unHave_license){
-        verify$save_license(license_key)
-      }
-    }
-}
+# checkManage <- function(){
+#     # 检查是否存在授权文件
+#     verify <- VerifyManage$new()
+#     license_key <- verify$read_license()
+#     unHave_license <- is.null(license_key)
+#     if (unHave_license) {
+#       # packageStartupMessage("未找到授权文件，请根据机器码向管理员获取授权")
+#       # 提示用户输入
+#       machine_id <- verify$get_machine_id()
+#       packageStartupMessage(sprintf("您的机器码是：%s", machine_id))
+#       license_key <- readline(prompt = "请输入您的授权码后按回车：")
+#     }
+#     # 验证授权
+#     chekcResult <- verify$verify_license(license_key)
+#     print(chekcResult)
+#     if (!chekcResult$success) {
+#       stop("未授权，禁止使用本包。请联系管理员获取授权，并替换授权文件。")
+#     }else{
+#       #授权成功再进行license存储
+#       if(unHave_license){
+#         verify$save_license(license_key)
+#       }
+#     }
+# }
 
 #' 验证运行环境
 #' @keywords internal
