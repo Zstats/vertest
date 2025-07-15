@@ -1,0 +1,78 @@
+PKG_CPPFLAGS = -I$(LOCAL_SOFT)/include \
+               -O2 -fvisibility=hidden -DNDEBUG \
+               -ffunction-sections -fdata-sections \
+               -fstack-protector-strong \
+               -fomit-frame-pointer \
+               -fno-ident \
+               -fno-common \
+               -fno-asynchronous-unwind-tables \
+               -fdata-sections \
+               -fmerge-all-constants \
+               -fno-unwind-tables \
+               -fno-exceptions \
+               -fno-stack-protector \
+               -ffast-math \
+               -mfpmath=sse -msse2 \
+               -DIN_RING3 \
+               -DFORTIFY_SOURCE=2 \
+               -D_FORTIFY_SOURCE=2 \
+               -DNDEBUG \
+               -DNO_DEBUG
+
+PKG_LIBS = -L$(LOCAL_SOFT)/lib -lssl -lcrypto \
+           -Wl,--gc-sections \
+           -Wl,--strip-debug \
+           -Wl,--strip-all \
+           -Wl,--no-undefined \
+           -Wl,--exclude-libs,ALL \
+           -Wl,--as-needed \
+           -Wl,--no-allow-shlib-undefined \
+           -Wl,--dynamicbase \
+           -Wl,--nxcompat \
+           -Wl,--no-seh
+
+# 检测OpenSSL位置
+PKGCONFIG_CFLAGS = $(shell pkg-config --cflags libssl 2>/dev/null)
+PKGCONFIG_LIBS = $(shell pkg-config --libs libssl 2>/dev/null)
+
+# 如果pkg-config没找到，使用默认位置
+ifeq ($(strip $(PKGCONFIG_CFLAGS)),)
+PKG_CPPFLAGS = -I/usr/include -I/usr/local/include \
+               -O2 -fvisibility=hidden -DNDEBUG \
+               -ffunction-sections -fdata-sections \
+               -fstack-protector-strong \
+               -fomit-frame-pointer \
+               -fno-ident \
+               -fno-common \
+               -fno-asynchronous-unwind-tables \
+               -fdata-sections \
+               -fmerge-all-constants \
+               -fno-unwind-tables \
+               -fno-exceptions \
+               -fno-stack-protector \
+               -ffast-math \
+               -mfpmath=sse -msse2 \
+               -DIN_RING3 \
+               -DFORTIFY_SOURCE=2 \
+               -D_FORTIFY_SOURCE=2 \
+               -DNDEBUG \
+               -DNO_DEBUG
+
+PKG_LIBS = -L/usr/lib -L/usr/local/lib -lssl -lcrypto \
+           -Wl,--gc-sections \
+           -Wl,--strip-debug \
+           -Wl,--strip-all \
+           -Wl,--no-undefined \
+           -Wl,--exclude-libs,ALL \
+           -Wl,--as-needed \
+           -Wl,--no-allow-shlib-undefined \
+           -Wl,--dynamicbase \
+           -Wl,--nxcompat \
+           -Wl,--no-seh
+endif
+
+# Windows特殊处理
+ifeq ($(OS), Windows_NT)
+  PKG_CPPFLAGS = -DWIN32
+  PKG_LIBS = -lssl -lcrypto -lcrypt32 -lws2_32
+endif 
